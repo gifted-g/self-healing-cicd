@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: selfhealing-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: selfhealing-demo
+  template:
+    metadata:
+      labels:
+        app: selfhealing-demo
+    spec:
+      containers:
+        - name: demo
+          image: ${IMAGE}
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
